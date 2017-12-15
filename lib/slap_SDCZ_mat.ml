@@ -250,13 +250,13 @@ let unluband m kl ku ?(fill_num = Some zero) =
 (** {2 Arithmetic operations} *)
 
 let wrap1
-    (f : ?m:int -> ?n:int -> ?ar:int -> ?ac:int -> I.mat -> _)
+    (f : ?patt:I.Mat.patt -> ?m:int -> ?n:int -> ?ar:int -> ?ac:int -> I.mat -> _)
     a =
   let m, n, ar, ac, a = M.__expose a in
   f ~m:(S.__expose m) ~n:(S.__expose n) ~ar ~ac a
 
 let wrap2
-    (f : ?m:int -> ?n:int ->
+    (f : ?patt:I.Mat.patt -> ?m:int -> ?n:int ->
      ?br:int -> ?bc:int -> ?b:I.mat ->
      ?ar:int -> ?ac:int -> I.mat -> _)
     ?b a =
@@ -272,7 +272,7 @@ let sum a = wrap1 I.Mat.sum a
 let trace a = Vec.sum (diag_rect a)
 
 let scal alpha a =
-  wrap1 (fun ?m ?n ?ar ?ac a -> I.Mat.scal alpha ?m ?n ?ar ?ac a) a
+  wrap1 (fun ?patt ?m ?n ?ar ?ac a -> I.Mat.scal alpha ?patt ?m ?n ?ar ?ac a) a
 
 let scal_cols a x =
   let m, n', ar, ac, a = M.__expose a in
@@ -321,7 +321,7 @@ let gemm_trace ~transa a ~transb b =
                    ~transa:(lacaml_trans3 transa) ~ar ~ac a
                    ~transb:(lacaml_trans3 transb) ~br ~bc b
 
-let syrk_trace a = wrap1 (fun ?m ?n -> I.Mat.syrk_trace ?n:m ?k:n) a
+let syrk_trace a = wrap1 (fun ?patt ?m ?n -> I.Mat.syrk_trace ?n:m ?k:n) a
 
 let symm2_trace ?upa a ?upb b =
   let n, n', ar, ac, a = M.__expose a in
